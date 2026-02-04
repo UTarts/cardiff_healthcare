@@ -26,7 +26,6 @@ export default function Navbar() {
           
           {/* Logo Section */}
           <Link to="/" className="flex-shrink-0 flex items-center cursor-pointer">
-            {/* Replace the old 'C' div with this Image tag */}
             <img 
               src="/logo.webp" 
               alt="Cardiff Healthcare" 

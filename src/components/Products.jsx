@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, X, ChevronRight, AlertCircle } from 'lucide-react';
 import { supabase } from '../supabaseClient';
-import { useNavigate, useLocation } from 'react-router-dom'; // Added useLocation
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export default function Products() {
   const navigate = useNavigate();
-  const location = useLocation(); // Get state from Home page
+  const location = useLocation(); // Hook to get data passed from Home
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("All");
@@ -22,20 +22,24 @@ export default function Products() {
         if (error) throw error;
         setProducts(data || []);
         
-        // DEEP LINKING LOGIC: If we came from Home page with an ID
+        // --- DEEP LINKING LOGIC ---
+        // Checks if Home page sent a Product ID to open
         if (location.state?.openProductId) {
           const targetProduct = data.find(p => p.id === location.state.openProductId);
           if (targetProduct) {
             setSelectedProduct(targetProduct);
-            // Clear state so it doesn't reopen on refresh
+            // Clear history state so refresh doesn't reopen it
             window.history.replaceState({}, document.title);
           }
         }
-      } catch (error) { console.error("Error", error); } 
-      finally { setLoading(false); }
+      } catch (error) { 
+        console.error("Error", error); 
+      } finally { 
+        setLoading(false); 
+      }
     };
     fetchProducts();
-  }, []); // Run once on mount
+  }, []);
 
   const openLightbox = (product) => {
     setSelectedProduct(product);
@@ -61,7 +65,7 @@ export default function Products() {
       return nameB.localeCompare(nameA);
     });
 
-  // SKELETON LOADER COMPONENT (Makes it feel snappy)
+  // --- SKELETON LOADER COMPONENT ---
   const ProductSkeleton = () => (
     <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden h-[300px] animate-pulse">
       <div className="h-48 bg-slate-200 dark:bg-slate-800"></div>
@@ -101,10 +105,10 @@ export default function Products() {
           </div>
         </div>
 
-        {/* GRID WITH SKELETON LOADING */}
+        {/* PRODUCTS GRID */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
           {loading ? (
-             // Show 6 skeletons while loading
+             // Show Skeletons while loading
              [...Array(6)].map((_, i) => <ProductSkeleton key={i} />)
           ) : (
             <AnimatePresence mode='popLayout'>
@@ -114,7 +118,7 @@ export default function Products() {
                     <img 
                       src={product.images?.[0] || "https://via.placeholder.com/400"} 
                       alt={product.name} 
-                      loading="lazy" // Native Lazy Loading for performance
+                      loading="lazy" // <--- PERFORMANCE BOOST
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
                     />
                     <div className="absolute top-2 right-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur px-2 py-0.5 rounded text-[10px] font-bold text-medical-600 border border-slate-200">{product.category}</div>
@@ -133,7 +137,7 @@ export default function Products() {
           )}
         </div>
 
-        {/* LIGHTBOX (Unchanged logic, just keeping it here) */}
+        {/* LIGHTBOX MODAL */}
         <AnimatePresence>
           {selectedProduct && (
             <div className="fixed inset-0 z-[100] flex items-center justify-center px-4">

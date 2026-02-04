@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import { useAuth } from './hooks/useAuth';
 import ScrollToTop from './components/ScrollToTop';
+import { useEffect } from 'react';
 
 // Security Wrapper
 const ProtectedRoute = ({ children }) => {
@@ -19,6 +20,20 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  // PREVENT INSTALL PROMPT
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      
+      e.preventDefault();
+      console.log('Install prompt blocked');
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
   return (
     <Router>
       <ScrollToTop />

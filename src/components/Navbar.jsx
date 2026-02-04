@@ -22,14 +22,16 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        {/* CHANGED: h-14 for mobile, md:h-16 for desktop */}
+        <div className="flex justify-between items-center h-14 md:h-16">
           
           {/* Logo Section */}
           <Link to="/" className="flex-shrink-0 flex items-center cursor-pointer">
+            {/* CHANGED: h-10 for mobile, md:h-14 for desktop */}
             <img 
               src="/logo.webp" 
               alt="Cardiff Healthcare" 
-              className="h-14 w-auto object-contain" 
+              className="h-10 md:h-14 w-auto object-contain" 
             />
           </Link>
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../supabaseClient';
 import { Plus, Trash2, Image as ImageIcon, Loader, X, Star, Edit2, UploadCloud } from 'lucide-react';
+import imageCompression from 'browser-image-compression'; 
 
 export default function ProductManager() {
   const [products, setProducts] = useState([]);
@@ -47,12 +48,33 @@ export default function ProductManager() {
     window.scrollTo(0,0);
   };
 
-  const handleFileSelect = (e) => {
+  const handleFileSelect = async (e) => {
     const files = Array.from(e.target.files);
-    setImageFiles(prev => [...prev, ...files]); // Add to existing selection
     
-    // Create preview URLs
-    const newPreviews = files.map(file => URL.createObjectURL(file));
+    // Compression Options
+    const options = {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 1200, 
+      useWebWorker: true,
+    };
+
+    const compressedFiles = [];
+    const newPreviews = [];
+
+    for (const file of files) {
+      try {
+        const compressedFile = await imageCompression(file, options);
+        compressedFiles.push(compressedFile);
+        newPreviews.push(URL.createObjectURL(compressedFile));
+      } catch (error) {
+        console.log(error);
+        alert("Compression failed, using original.");
+        compressedFiles.push(file); // Fallback
+        newPreviews.push(URL.createObjectURL(file));
+      }
+    }
+
+    setImageFiles(prev => [...prev, ...compressedFiles]); 
     setPreviewUrls(prev => [...prev, ...newPreviews]);
   };
 

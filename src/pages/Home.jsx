@@ -81,7 +81,11 @@ export default function Home() {
                   />
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white">{product.name}</h3>
                   <p className="text-sm text-slate-500 mb-4">{product.composition}</p>
-                  <Link to="/products" className="block text-center w-full py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-medical-50 dark:hover:bg-slate-700 transition-colors">
+                  <Link 
+                    to="/products" 
+                    state={{ openProductId: product.id }} 
+                    className="block text-center w-full py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-medical-50 dark:hover:bg-slate-700 transition-colors"
+                  >
                     View Details
                   </Link>
                 </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../../supabaseClient';
-import { Clock, Mail, MessageCircle, CheckCircle } from 'lucide-react';
+import { Clock, Mail, MessageCircle, CheckCircle, Phone } from 'lucide-react';
 
 export default function InquiryManager() {
   const [inquiries, setInquiries] = useState([]);
@@ -44,12 +44,32 @@ export default function InquiryManager() {
           inquiries.map((inquiry) => (
             <div key={inquiry.id} className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
               <div className="flex justify-between items-start mb-4">
-                <div>
+              <div>
                   <h3 className="font-bold text-lg text-slate-900 dark:text-white">{inquiry.customer_name}</h3>
-                  <div className="flex items-center gap-2 text-sm text-slate-500 mt-1">
-                    <Mail size={14} /> {inquiry.customer_email}
-                    <span className="text-slate-300">|</span>
-                    <Clock size={14} /> {new Date(inquiry.created_at).toLocaleDateString()}
+                  
+                  {/* Contact Details Row */}
+                  <div className="flex flex-wrap gap-4 text-sm text-slate-500 mt-2">
+                    
+                    {/* Email */}
+                    <a href={`mailto:${inquiry.customer_email}`} className="flex items-center gap-1 hover:text-medical-600 transition-colors">
+                      <Mail size={14} /> {inquiry.customer_email}
+                    </a>
+
+                    {/* Phone (New) */}
+                    {inquiry.customer_phone && (
+                      <a href={`tel:${inquiry.customer_phone}`} className="flex items-center gap-1 hover:text-medical-600 transition-colors">
+                        <Phone size={14} /> {inquiry.customer_phone}
+                      </a>
+                    )}
+
+                    {/* Date */}
+                    <span className="flex items-center gap-1 text-slate-400">
+                      <Clock size={14} /> 
+                      {new Date(inquiry.created_at).toLocaleString('en-GB', {
+                        day: '2-digit', month: '2-digit', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit', hour12: true
+                      })}
+                    </span>
                   </div>
                 </div>
                 <span className={`px-3 py-1 rounded-full text-xs font-bold ${inquiry.status === 'New' ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'}`}>
